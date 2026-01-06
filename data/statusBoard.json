@@ -1,0 +1,88 @@
+{
+  "sections": [
+    {
+      "name": "FRONT END",
+      "groups": [
+        {
+          "name": "HDP FE",
+          "tools": [
+            {"base": "DCENFA1", "chambers": {"MF": "", "A": "STI", "B": "PSG", "C": "STI"}},
+            {"base": "DCENFA3", "chambers": {"MF": "", "A": "STI TW", "B": "STI TW", "C": "USG"}},
+            {"base": "DCENFA4", "chambers": {"MF": "", "A": "STI MS", "B": "PSG", "C": "PSG"}},
+            {"base": "DCENFA6", "chambers": {"MF": "", "A": "STI TW", "B": "STI TW", "C": "STI TW"}},
+            {"base": "DCENFA7", "chambers": {"MF": "", "A": "STI MS", "B": "STI", "C": "STI"}}
+          ]
+        },
+        {
+          "name": "NIT FE / UV",
+          "tools": [
+            {"base": "DPROFA2", "chambers": {"MF": "", "A": null, "B": "400", "C": "480"}},
+            {"base": "DPROFA4", "chambers": {"MF": "", "A": "UV", "B": "300", "C": "480"}},
+            {"base": "DPROFA7", "chambers": {"MF": "", "A": "UV", "B": "300", "C": null}}
+          ]
+        },
+        {
+          "name": "TEOS FE",
+          "tools": [
+            {"base": "DPROFA6", "chambers": {"MF": "", "A": "", "B": "", "C": ""}}
+          ]
+        },
+        {
+          "name": "DARK / APF",
+          "tools": [
+            {"base": "DPROFA8", "chambers": {"MF": "", "A": "APFX", "B": "DARC", "C": "DARC"}}
+          ]
+        },
+        {
+          "name": "HARP\nSTI / PMD",
+          "tools": [
+            {"base": "DPROFA1", "chambers": {"MF": "", "A": "STI", "B": "STI", "C": "PMD"}},
+            {"base": "DPROFA5", "chambers": {"MF": "", "A": "PMD", "B": "PMD", "C": "PMD"}}
+          ]
+        },
+        {
+          "name": "SACVD USG",
+          "tools": [
+            {"base": "DPROFA3", "chambers": {"MF": "", "A": "", "B": "", "C": ""}}
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BACK END",
+      "groups": [
+        {
+          "name": "HDP BE",
+          "tools": [
+            {"base": "DCENFA2", "chambers": {"MF": "", "A": "PAS", "B": "PAS", "C": "PAS"}},
+            {"base": "DCENFA5", "chambers": {"MF": "", "A": "PAS", "B": "PAS", "C": "PAS"}}
+          ]
+        },
+        {
+          "name": "LOW K",
+          "tools": [
+            {"base": "DPROBA3", "chambers": {"MF": "", "A": "SICN", "B": "SIOC", "C": "SIOC"}},
+            {"base": "DPROBA8", "chambers": {"MF": "", "A": "SICN", "B": "SICN", "C": "SIOC"}}
+          ]
+        },
+        {
+          "name": "TEOS_BE\nFSG PSG\nTEOS_LK",
+          "tools": [
+            {"base": "DPROBA2", "chambers": {"MF": "", "A": "FSG-PSG", "B": "FSG-PSG", "C": "TEOS_LK"}},
+            {"base": "DPROBA5", "chambers": {"MF": "", "A": "FSG", "B": "FSG", "C": "FSG"}},
+            {"base": "DPROBA7", "chambers": {"MF": "", "A": "TEOS_LK", "B": "TEOS_LK", "C": "TEOS_LK"}}
+          ]
+        },
+        {
+          "name": "NIT BE",
+          "tools": [
+            {"base": "DPROBA1", "chambers": {"MF": "", "A": "200", "B": "PAS", "C": "BAR"}},
+            {"base": "DPROBA4", "chambers": {"MF": "", "A": "BAR", "B": "BAR", "C": "BAR 320°"}},
+            {"base": "DPROBA6", "chambers": {"MF": "", "A": "200", "B": "PAS", "C": "BAR"}}
+          ]
+        }
+      ]
+    }
+  ],
+  "suffixes": ["_MF", "_A", "_B", "_C"]
+}

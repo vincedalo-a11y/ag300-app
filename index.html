@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AG300 App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/review.css">
+    <link rel="stylesheet" href="css/statusBoard.css">
+</head>
+<body>
+    <nav class="navbar glass">
+        <div class="nav-brand">
+            <img src="logo.jpg" alt="Logo" class="nav-logo">
+            <span class="nav-title">AG300</span>
+        </div>
+        <div class="nav-links">
+            <a href="#" class="nav-link active" data-page="home">🏠 Home</a>
+            <a href="#" class="nav-link" data-page="passdown">📋 Passdown</a>
+            <a href="#" class="nav-link" data-page="docs">📁 Docs</a>
+            <a href="#" class="nav-link" data-page="pm">🔧 PM</a>
+            <a href="#" class="nav-link" data-page="settings">⚙️ Settings</a>
+        </div>
+    </nav>
+    
+    <main class="main-content" id="mainContent">
+        <!-- Content loaded dynamically -->
+    </main>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/database.js"></script>
+    <script src="js/passdown.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/statusBoard.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</body>
+</html>

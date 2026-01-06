@@ -1,0 +1,42 @@
+[      
+    {"marker": "CH UP", "statoFinale": "UP", "colore": "#00ff00"},
+    {"marker": "MF UP", "statoFinale": "UP", "colore": "#00ff00"},
+
+    {"marker": "CH QUAL", "statoFinale": "QUAL", "colore": "#ffff00"},
+    {"marker": "CH QUAL", "statoFinale": "QUAL", "colore": "#ffff00"}, 
+
+    {"marker": "CH DOWN", "statoFinale": "USD", "colore": "#ff0000"},
+    {"marker": "MF DOWN", "statoFinale": "USD", "colore": "#ff0000"},
+    {"marker": "MF USD", "statoFinale": "USD", "colore": "#ff0000"},
+    {"marker": "MF USD", "statoFinale": "USD", "colore": "#ff0000"},
+
+    {"marker": "CH PM", "statoFinale": "PM", "colore": "#00b0f0"},
+    {"marker": "MF PM", "statoFinale": "PM", "colore": "#00b0f0"},
+
+    {"marker": "CH HOLD-SPC", "statoFinale": "HOLD-SPC", "colore": "#ccffff"},
+    {"marker": "MF HOLD-SPC", "statoFinale": "HOLD-SPC", "colore": "#ccffff"},
+
+    {"marker": "CH ENG-EVAL", "statoFinale": "ENG-EVAL", "colore": "#ccffff"},
+    {"marker": "CH ENG-EVAL", "statoFinale": "ENG-EVAL", "colore": "#ccffff"},
+
+    {"marker": "CH FACILITY", "statoFinale": "FACILITY", "colore": "#ffc0cb"},
+    {"marker": "MF FACILITY", "statoFinale": "FACILITY", "colore": "#ffc0cb"},
+
+    {"marker": "CH ENG", "statoFinale": "ENG", "colore": "#008040"},
+    {"marker": "MF ENG", "statoFinale": "ENG", "colore": "#008040"},
+
+    {"marker": "CH HOLD", "statoFinale": "HOLD", "colore": "#ffc000"},
+    {"marker": "MF HOLD", "statoFinale": "HOLD", "colore": "#ffc000"},
+
+    {"marker": "CH REPAIR-WAIT", "statoFinale": "REPAIR-WAIT", "colore": "#e49edd"},
+    {"marker": "MF REPAIR-WAIT", "statoFinale": "REPAIR-WAIT", "colore": "#e49edd"},
+
+    {"marker": "CH MON", "statoFinale": "MON", "colore": "#b5e6a2"},
+    {"marker": "MF MON", "statoFinale": "MON", "colore": "#b5e6a2"},
+
+    {"marker": "CH WARM IDLE", "statoFinale": "WARM IDLE", "colore": "#f2f2f2"},
+    {"marker": "MF WARM IDLE", "statoFinale": "WARM IDLE", "colore": "#f2f2f2"},
+
+    {"marker": "CH STARTUP", "statoFinale": "STARTUP", "colore": "#bfbfbf"},
+    {"marker": "MF STARTUP", "statoFinale": "STARTUP", "colore": "#bfbfbf"}
+]
