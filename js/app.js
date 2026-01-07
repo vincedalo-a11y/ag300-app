@@ -33,6 +33,9 @@ function navigateTo(page) {
             main.innerHTML = renderPassdownStart();
             setupPassdownStartEvents();
             break;
+        case 'storico':
+                    renderStoricoPage();
+                    break;
         case 'docs':
             main.innerHTML = renderDocsPage();
             break;
@@ -44,6 +47,9 @@ function navigateTo(page) {
             break;
         case 'statusboard':
             renderStatusBoardPage();
+            break;
+        case 'andamento':
+            renderAndamentoPage();
             break;
     }
 }
@@ -61,6 +67,18 @@ function renderHomePage() {
                 <div class="home-card-icon">📋</div>
                 <div class="home-card-title">Passdown</div>
                 <div class="home-card-desc">Gestione note di passaggio turno</div>
+            </div>
+
+            <div class="card home-card" data-goto="storico">
+                <div class="home-card-icon">📚</div>
+                <div class="home-card-title">Storico Passdown</div>
+                <div class="home-card-desc">Consulta e filtra lo storico completo</div>
+            </div>
+
+            <div class="card home-card" data-goto="andamento">
+                <div class="home-card-icon">📈</div>
+                <div class="home-card-title">Andamento Tool</div>
+                <div class="home-card-desc">Grafico storico status per tool</div>
             </div>
             
             <div class="card home-card" data-goto="docs">
@@ -299,6 +317,7 @@ function setupSettingsEvents() {
                 case 'version':
                     content.innerHTML = renderVersionSection();
                     break;
+                
             }
         });
     });

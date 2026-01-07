@@ -1,0 +1,323 @@
+/* ===== STORICO PASSDOWN STYLES ===== */
+.storico-card {
+    padding: 20px;
+}
+
+.storico-toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.storico-count {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.storico-table-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border-glass);
+    position: relative;
+}
+
+.storico-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    overflow: visible;
+}
+
+.storico-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.storico-table th,
+.storico-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+/* Header row */
+.storico-header-row th {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Sortable columns */
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.sortable:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sortable::after {
+    content: ' ↕';
+    opacity: 0.3;
+    font-size: 0.75rem;
+}
+
+.sortable.sort-asc::after {
+    content: ' ↑';
+    opacity: 1;
+    color: var(--primary);
+}
+
+.sortable.sort-desc::after {
+    content: ' ↓';
+    opacity: 1;
+    color: var(--primary);
+}
+
+/* Filter row */
+.storico-filter-row th {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 6px 8px;
+    position: relative;
+    overflow: visible;
+}
+
+.filter-input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--border-glass);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+    font-size: 0.8rem;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.filter-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Multi-select dropdown */
+.multi-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.multi-select-display {
+    padding: 6px 8px;
+    border: 1px solid var(--border-glass);
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.multi-select-display:hover {
+    border-color: var(--primary);
+}
+
+.multi-select-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 250px;
+    max-height: 400px;
+    background: #1a1a2e;
+    border: 1px solid var(--border-glass);
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.multi-select-dropdown.open {
+    display: block;
+}
+
+.multi-select-actions {
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border-bottom: 1px solid var(--border-glass);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.multi-select-btn {
+    flex: 1;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border: 1px solid var(--border-glass);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.multi-select-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.multi-select-options {
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 4px;
+}
+
+.multi-select-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.multi-select-option:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.multi-select-option input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+/* Table body */
+.storico-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.storico-table tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Cell styles */
+.storico-cell-id {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    width: 50px;
+}
+
+.storico-cell-data {
+    white-space: nowrap;
+    width: 90px;
+}
+
+.storico-cell-shift {
+    width: 70px;
+}
+
+.storico-cell-tool {
+    font-weight: 600;
+    white-space: nowrap;
+    width: 100px;
+}
+
+.storico-cell-status {
+    width: 80px;
+}
+
+.storico-cell-workers {
+    max-width: 75px;
+    width: 75px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.storico-cell-text {
+    max-width: 275px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.storico-table tbody tr:hover .storico-cell-workers,
+.storico-table tbody tr:hover .storico-cell-text {
+    white-space: normal;
+    word-break: break-word;
+    overflow: visible;
+}
+
+/* Badges */
+.shift-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.shift-badge.day {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.shift-badge.night {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.status-badge-small {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Empty state */
+.storico-empty {
+    text-align: center;
+    padding: 40px !important;
+    color: var(--text-secondary);
+    font-style: italic;
+    height: 350px;
+    vertical-align: top;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .storico-cell-text {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .storico-table {
+        font-size: 0.75rem;
+    }
+    
+    .storico-table th,
+    .storico-table td {
+        padding: 6px 8px;
+    }
+    
+    .storico-cell-text {
+        max-width: 100px;
+    }
+}
