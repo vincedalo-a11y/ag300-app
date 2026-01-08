@@ -899,42 +899,13 @@ function setupReviewPageEvents() {
         });
     });
     
-    // Textarea change + auto-resize + hover expand
+   // Textarea change
     document.querySelectorAll('.cell-input').forEach(textarea => {
-        let hoverTimeout;
-        
-        // Auto-resize on input
         textarea.addEventListener('input', (e) => {
             const section = e.target.dataset.section;
             const index = parseInt(e.target.dataset.index);
             const field = e.target.dataset.field;
             updateReviewData(section, index, field, e.target.value);
-        });
-        
-        // Espandi al click
-        textarea.addEventListener('focus', () => {
-            textarea.classList.add('expanded');
-        });
-        
-        // Riduci quando perde il focus
-        textarea.addEventListener('blur', () => {
-            textarea.classList.remove('expanded');
-        });
-        
-        // Espandi dopo 2 secondi di hover
-        textarea.addEventListener('mouseenter', () => {
-            hoverTimeout = setTimeout(() => {
-                textarea.classList.add('expanded');
-            }, 2000);
-        });
-        
-        // Cancella il timeout se il mouse esce prima
-        textarea.addEventListener('mouseleave', () => {
-            clearTimeout(hoverTimeout);
-            // Rimuovi expanded solo se non ha il focus
-            if (document.activeElement !== textarea) {
-                textarea.classList.remove('expanded');
-            }
         });
     });
     
@@ -1021,9 +992,9 @@ async function savePassdownFinal() {
     const result = await savePassdownBatch(records);
     
     if (result.success) {
-        alert(`✅ Passdown salvato con successo!\n\n${result.count} tool salvati nel database.`);
-        // Torna alla home
-        navigateTo('home');
+        alert('✅ Passdown salvato con successo!\n\n' + result.count + ' tool salvati nel database.');
+        // vai alla statusboard
+        navigateTo('statusboard');
     } else {
         alert(`❌ Errore nel salvataggio:\n\n${result.error}`);
     }

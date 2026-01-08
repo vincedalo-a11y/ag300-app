@@ -34,8 +34,8 @@ function navigateTo(page) {
             setupPassdownStartEvents();
             break;
         case 'storico':
-                    renderStoricoPage();
-                    break;
+            renderStoricoPage();
+            break;
         case 'docs':
             main.innerHTML = renderDocsPage();
             break;
@@ -195,10 +195,17 @@ function renderSettingsContent() {
                     <span class="settings-menu-icon">📝</span>
                     <span>OneNote Markers</span>
                 </button>
+
+                <button class="settings-menu-btn" data-section="maillist">
+                    <span class="settings-menu-icon">📧</span>
+                    <span>Mail List</span>
+                </button>
+
                 <button class="settings-menu-btn" data-section="developer">
                     <span class="settings-menu-icon">❓</span>
                     <span>Ask Developer</span>
                 </button>
+                
                 <button class="settings-menu-btn" data-section="version">
                     <span class="settings-menu-icon">ℹ️</span>
                     <span>Version Info</span>
@@ -272,6 +279,69 @@ function renderMarkersSection() {
     `;
 }
 
+function renderMailListSection() {
+    return `
+        <div class="mail-list-section">
+            <h3 class="mail-list-title">📧 Configurazione Mail List</h3>
+            <div class="mail-list-container">
+                <div class="mail-list-column">
+                    <h4 class="mail-list-header amat">AMAT</h4>
+                    <div class="mail-list-group">
+                        <label class="mail-list-label">Destinatari (TO)</label>
+                        <div class="mail-list-emails" id="amatTo"></div>
+                    </div>
+                    <div class="mail-list-group">
+                        <label class="mail-list-label">Copia Conoscenza (CC)</label>
+                        <div class="mail-list-emails" id="amatCc"></div>
+                    </div>
+                </div>
+                <div class="mail-list-column">
+                    <h4 class="mail-list-header st">ST</h4>
+                    <div class="mail-list-group">
+                        <label class="mail-list-label">Destinatari (TO)</label>
+                        <div class="mail-list-emails" id="stTo"></div>
+                    </div>
+                    <div class="mail-list-group">
+                        <label class="mail-list-label">Copia Conoscenza (CC)</label>
+                        <div class="mail-list-emails" id="stCc"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+async function loadMailLists() {
+    try {
+        // Carica AMAT
+        const amatResponse = await fetch('data/mailAMAT.json');
+        const amatData = await amatResponse.json();
+        
+        document.getElementById('amatTo').innerHTML = amatData.to.map(email => 
+            `<span class="mail-tag">${email}</span>`
+        ).join('');
+        
+        document.getElementById('amatCc').innerHTML = amatData.cc.map(email => 
+            `<span class="mail-tag">${email}</span>`
+        ).join('');
+        
+        // Carica ST
+        const stResponse = await fetch('data/mailST.json');
+        const stData = await stResponse.json();
+        
+        document.getElementById('stTo').innerHTML = stData.to.map(email => 
+            `<span class="mail-tag">${email}</span>`
+        ).join('');
+        
+        document.getElementById('stCc').innerHTML = stData.cc.map(email => 
+            `<span class="mail-tag">${email}</span>`
+        ).join('');
+        
+    } catch (e) {
+        console.error('Errore caricamento mail lists:', e);
+    }
+}
+
 function renderDeveloperSection() {
     return `
         <div class="developer-section">
@@ -310,6 +380,10 @@ function setupSettingsEvents() {
                 case 'markers':
                     content.innerHTML = renderMarkersSection();
                     break;
+                case 'maillist':
+                    content.innerHTML = renderMailListSection();
+                    loadMailLists();
+                    break;
                 case 'developer':
                     content.innerHTML = renderDeveloperSection();
                     setupDeveloperEvents();
@@ -317,7 +391,6 @@ function setupSettingsEvents() {
                 case 'version':
                     content.innerHTML = renderVersionSection();
                     break;
-                
             }
         });
     });

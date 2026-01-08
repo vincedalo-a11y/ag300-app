@@ -69,6 +69,9 @@ async function renderStatusBoardPage() {
     const frontEndTable = generateSectionTable(frontEndSection, toolStatusMap, 'front-end');
     const backEndTable = generateSectionTable(backEndSection, toolStatusMap, 'back-end');
     
+    // Genera elenco passdown
+    const passdownList = generatePassdownList(shiftData);
+    
     main.innerHTML = `
         <div class="page-header">
             <h1 class="page-title">📊 Status Board</h1>
@@ -77,9 +80,9 @@ async function renderStatusBoardPage() {
         
         <div class="card no-print" style="margin-bottom: 20px;">
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                <button class="btn btn-primary" id="btnCopyStatusBoard">📋 Copia come immagine</button>
-                <button class="btn btn-secondary" id="btnPrintStatusBoard">🖨️ Stampa</button>
                 <button class="btn btn-secondary" id="btnBackFromSB">← Torna alla Home</button>
+                <button class="btn btn-primary" id="btnMailAMAT">📧 Invia Mail AMAT</button>
+                <button class="btn btn-primary" id="btnMailST">📧 Prepara Mail ST</button>
             </div>
         </div>
         
@@ -96,9 +99,71 @@ async function renderStatusBoardPage() {
                 </div>
             </div>
         </div>
+        
+        <div class="card passdown-list-card">
+            <h2 class="passdown-list-title">📋 Dettaglio Passdown - ${shiftDate} ${shiftType}</h2>
+            <div class="passdown-list-container">
+                ${passdownList}
+            </div>
+        </div>
     `;
     
     setupStatusBoardEvents();
+}
+
+// Genera l'elenco del passdown
+function generatePassdownList(shiftData) {
+    // Filtra solo i tool che hanno dati (non UP di default o con commenti)
+    const toolsWithData = shiftData.filter(row => 
+        row.status !== 'UP' || 
+        row.problem_statement || 
+        row.actions_done || 
+        row.to_do
+    );
+    
+    if (toolsWithData.length === 0) {
+        return `<div class="passdown-list-empty">Tutti i tool sono UP senza commenti</div>`;
+    }
+    
+    let html = `
+        <table class="passdown-list-table">
+            <thead>
+                <tr>
+                    <th class="pl-col-tool">Tool</th>
+                    <th class="pl-col-status">Status</th>
+                    <th class="pl-col-ps">Problem Statement</th>
+                    <th class="pl-col-ad">Actions Done</th>
+                    <th class="pl-col-td">To Do</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+    
+    toolsWithData.forEach(row => {
+        const statusColor = getStatusColor(row.status);
+        const textColor = getContrastTextColor(statusColor);
+        
+        html += `
+            <tr>
+                <td class="pl-cell-tool">${row.tool || ''}</td>
+                <td class="pl-cell-status">
+                    <span class="status-badge-pl" style="background-color: ${statusColor}; color: ${textColor};">
+                        ${row.status || 'UP'}
+                    </span>
+                </td>
+                <td class="pl-cell-text">${row.problem_statement || ''}</td>
+                <td class="pl-cell-text">${row.actions_done || ''}</td>
+                <td class="pl-cell-text">${row.to_do || ''}</td>
+            </tr>
+        `;
+    });
+    
+    html += `
+            </tbody>
+        </table>
+    `;
+    
+    return html;
 }
 
 // Genera tabella per una sezione (FRONT END o BACK END)
@@ -232,41 +297,91 @@ async function getLastShiftData() {
 }
 
 // Setup eventi Status Board
+// Setup eventi Status Board
 function setupStatusBoardEvents() {
     document.getElementById('btnBackFromSB')?.addEventListener('click', () => {
         navigateTo('home');
     });
     
-    document.getElementById('btnPrintStatusBoard')?.addEventListener('click', () => {
-        window.print();
+    document.getElementById('btnMailAMAT')?.addEventListener('click', async () => {
+        await sendMailAMAT();
     });
     
-    document.getElementById('btnCopyStatusBoard')?.addEventListener('click', async () => {
-        try {
-            const container = document.getElementById('statusBoardContainer');
-            
-            if (typeof html2canvas !== 'undefined') {
-                const canvas = await html2canvas(container, {
-                    backgroundColor: '#ffffff',
-                    scale: 2
-                });
-                
-                canvas.toBlob(blob => {
-                    navigator.clipboard.write([
-                        new ClipboardItem({ 'image/png': blob })
-                    ]).then(() => {
-                        alert('✅ Status Board copiato negli appunti!');
-                    }).catch(err => {
-                        console.error('Errore copia:', err);
-                        alert('❌ Errore nella copia. Prova a stampare invece.');
-                    });
-                });
-            } else {
-                alert('⚠️ Funzione non disponibile. Usa la stampa invece.');
-            }
-        } catch (e) {
-            console.error('Errore:', e);
-            alert('❌ Errore nella copia');
-        }
+    document.getElementById('btnMailST')?.addEventListener('click', () => {
+        // TODO: Implementare preparazione mail ST
+        alert('Funzione Prepara Mail ST - Da implementare');
     });
+}
+
+// Invia Mail AMAT
+// Invia Mail AMAT
+async function sendMailAMAT() {
+    try {
+        // Carica destinatari dal JSON
+        const response = await fetch('data/mailAMAT.json');
+        const mailData = await response.json();
+        
+        const to = mailData.to.join(';');
+        const cc = mailData.cc.join(';');
+        
+        // Prendi data e shift dalla pagina
+        const subtitle = document.querySelector('.page-subtitle')?.textContent || '';
+        const match = subtitle.match(/Ultimo turno: (.+) - (.+)/);
+        const shiftDate = match ? match[1] : '';
+        const shiftType = match ? match[2] : '';
+        
+        // Oggetto mail
+        const subject = `PASSDOWN ${shiftDate} ${shiftType} MSA CVD AG300`;
+        
+        // Corpo mail
+        const mailBody = `Dear All,
+
+Please find below the status of the DSM tools in AG300.
+
+`;
+        
+        // Apri subito Outlook
+        const mailtoLink = `mailto:${to}?cc=${cc}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(mailBody)}`;
+        window.open(mailtoLink, '_self');
+        
+        // Poi copia le tabelle
+        setTimeout(async () => {
+            try {
+                const statusBoardContainer = document.getElementById('statusBoardContainer');
+                const passdownListCard = document.querySelector('.passdown-list-card');
+                
+                if (typeof html2canvas !== 'undefined' && statusBoardContainer) {
+                    const tempContainer = document.createElement('div');
+                    tempContainer.style.background = 'white';
+                    tempContainer.style.padding = '20px';
+                    tempContainer.innerHTML = statusBoardContainer.outerHTML + (passdownListCard ? passdownListCard.outerHTML : '');
+                    document.body.appendChild(tempContainer);
+                    
+                    const canvas = await html2canvas(tempContainer, {
+                        backgroundColor: '#ffffff',
+                        scale: 2
+                    });
+                    
+                    document.body.removeChild(tempContainer);
+                    
+                    canvas.toBlob(async blob => {
+                        try {
+                            await navigator.clipboard.write([
+                                new ClipboardItem({ 'image/png': blob })
+                            ]);
+                            alert('✅ Status Board copiato!\n\nIncolla con Ctrl+V nella mail.');
+                        } catch (err) {
+                            console.log('Copia automatica non riuscita');
+                        }
+                    });
+                }
+            } catch (e) {
+                console.log('Errore copia:', e);
+            }
+        }, 500);
+        
+    } catch (e) {
+        console.error('Errore invio mail AMAT:', e);
+        alert('❌ Errore nella preparazione della mail');
+    }
 }

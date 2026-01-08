@@ -191,14 +191,18 @@
     transition: all 0.3s ease;
 }
 
-.cell-input:focus,
-.cell-input.expanded {
-    min-height: 80px !important;
-    max-height: 200px !important;
-    overflow-y: auto;
+.cell-input:focus {
     background: rgba(0, 0, 0, 0.3);
     border-color: var(--primary);
     outline: none;
+}
+
+.review-table tbody tr:hover .cell-input {
+    min-height: auto !important;
+    max-height: none !important;
+    height: auto !important;
+    white-space: pre-wrap;
+    overflow-y: visible;
 }
 
 /* Scrollbar per le celle */

@@ -1268,3 +1268,61 @@ textarea.form-control[readonly] {
     font-family: 'Monaco', 'Consolas', monospace;
     font-weight: 600;
 }
+
+/* ===== MAIL LIST STYLES ===== */
+.mail-list-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.mail-list-column {
+    flex: 1;
+    min-width: 280px;
+}
+
+.mail-list-header {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.mail-list-header.amat {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: white;
+}
+
+.mail-list-header.st {
+    background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+    color: white;
+}
+
+.mail-list-group {
+    margin-bottom: 16px;
+}
+
+.mail-list-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.mail-list-emails {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.mail-tag {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-glass);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--text-primary);
+}
