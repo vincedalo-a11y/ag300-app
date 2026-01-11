@@ -6,6 +6,7 @@ let selectedMonths = 6;
 // Ordine status dal basso (UP) all'alto (USD)
 const statusOrder = [
     'UP',
+    'UP-DATA',
     'WARM IDLE',
     'STARTUP',
     'FACILITY',
@@ -23,6 +24,7 @@ const statusOrder = [
 // Colori per ogni status
 const statusColors = {
     'UP': '#00ff00',
+    'UP-DATA': '#00cc00',
     'WARM IDLE': '#f2f2f2',
     'STARTUP': '#bfbfbf',
     'FACILITY': '#ffc0cb',
@@ -36,6 +38,7 @@ const statusColors = {
     'REPAIR-WAIT': '#e49edd',
     'USD': '#ff0000'
 };
+
 
 // Render pagina andamento
 async function renderAndamentoPage() {
@@ -74,6 +77,7 @@ async function renderAndamentoPage() {
                 </div>
                 
                 <button class="btn btn-primary" id="btnGenerateChart">📊 Genera Grafico</button>
+                <button class="btn btn-secondary" id="btnResetZoom" style="display: none;">🔄 Reset Zoom</button>
             </div>
         </div>
         
@@ -135,6 +139,12 @@ function setupAndamentoEvents() {
             e.target.style.display = 'none';
         }
     });
+
+    document.getElementById('btnResetZoom')?.addEventListener('click', () => {
+        if (andamentoChart) {
+            andamentoChart.resetZoom();
+        }
+    });
 }
 
 // Genera il grafico
@@ -167,6 +177,10 @@ async function generateChart() {
     
     // Crea il grafico
     createChart(chartData);
+
+    // Mostra pulsante reset zoom
+    const resetBtn = document.getElementById('btnResetZoom');
+    if (resetBtn) resetBtn.style.display = 'inline-flex';
 }
 
 // Carica dati dal database
@@ -192,6 +206,9 @@ async function loadAndamentoData(tool, startDate, endDate) {
         console.error('Errore caricamento dati:', error);
         return [];
     }
+
+    // Mostra pulsante reset zoom
+    document.getElementById('btnResetZoom').style.display = 'inline-flex';
 }
 
 // Genera range di date
@@ -230,11 +247,17 @@ function mapDataToDays(allDays, data) {
         const record = dataMap[key];
         
         if (record) {
+            // Se è UP ma ha commenti, usa UP-DATA
+            let status = record.status || 'UP';
+            if (status === 'UP' && (record.problem_statement || record.actions_done || record.to_do)) {
+                status = 'UP-DATA';
+            }
+            
             return {
                 date: day.date,
                 shift: day.shift,
-                status: record.status || 'UP',
-                statusIndex: statusOrder.indexOf(record.status || 'UP'),
+                status: status,
+                statusIndex: statusOrder.indexOf(status),
                 hasData: true,
                 record: record
             };
@@ -285,19 +308,22 @@ function createChart(chartData) {
                 backgroundColor: colors,
                 pointBackgroundColor: colors,
                 pointBorderColor: colors,
-                pointRadius: 2,
-                pointHoverRadius: 6,
+                pointRadius: 5,
+                pointHoverRadius: 10,
+                pointHitRadius: 15,
                 fill: false,
                 tension: 0,
                 stepped: 'before'
             }]
         },
         options: {
+            
             responsive: true,
             maintainAspectRatio: false,
             interaction: {
-                intersect: true,
-                mode: 'point'
+                intersect: false,
+                mode: 'nearest',
+                axis: 'x'
             },
             onClick: (event, elements) => {
                 if (elements.length > 0) {
@@ -350,11 +376,24 @@ function createChart(chartData) {
                 legend: {
                     display: false
                 },
+                zoom: {
+                    zoom: {
+                        drag: {
+                            enabled: true,
+                            backgroundColor: 'rgba(10, 132, 255, 0.2)',
+                            borderColor: 'rgba(10, 132, 255, 0.8)',
+                            borderWidth: 1
+                        },
+                        mode: 'x'
+                    }
+                },
                 tooltip: {
+                    enabled: true,
                     callbacks: {
                         label: function(context) {
                             const point = chartData[context.dataIndex];
-                            return `Status: ${point.status}`;
+                            const displayStatus = point.status === 'UP-DATA' ? 'UP (con dati)' : point.status;
+                            return `Status: ${displayStatus}`;
                         },
                         afterLabel: function(context) {
                             const point = chartData[context.dataIndex];
@@ -376,21 +415,22 @@ function createChart(chartData) {
 function showPointDetails(point) {
     const popup = document.getElementById('andamentoPopup');
     const displayDate = convertToDisplayDate(point.date);
+    const displayStatus = point.status === 'UP-DATA' ? 'UP (con dati)' : point.status;
     
     document.getElementById('popupTitle').textContent = `${displayDate} - ${point.shift}`;
-    document.getElementById('popupStatus').innerHTML = `<span style="background-color: ${statusColors[point.status]}; color: ${getContrastTextColor(statusColors[point.status])}; padding: 2px 8px; border-radius: 10px;">${point.status}</span>`;
+    document.getElementById('popupStatus').innerHTML = `<span style="background-color: ${statusColors[point.status]}; color: ${getContrastTextColor(statusColors[point.status])}; padding: 2px 8px; border-radius: 10px;">${displayStatus}</span>`;
     document.getElementById('popupShift').textContent = point.shift;
     
     if (point.hasData && point.record) {
-        document.getElementById('popupWorkers').textContent = point.record.workers || 'N/A';
-        document.getElementById('popupPS').textContent = point.record.problem_statement || 'N/A';
-        document.getElementById('popupAD').textContent = point.record.actions_done || 'N/A';
-        document.getElementById('popupTD').textContent = point.record.to_do || 'N/A';
+        if (document.getElementById('popupWorkers')) document.getElementById('popupWorkers').textContent = point.record.workers || 'N/A';
+        if (document.getElementById('popupPS')) document.getElementById('popupPS').textContent = point.record.problem_statement || 'N/A';
+        if (document.getElementById('popupAD')) document.getElementById('popupAD').textContent = point.record.actions_done || 'N/A';
+        if (document.getElementById('popupTD')) document.getElementById('popupTD').textContent = point.record.to_do || 'N/A';
     } else {
-        document.getElementById('popupWorkers').textContent = 'Nessun dato registrato';
-        document.getElementById('popupPS').textContent = 'Nessun dato registrato';
-        document.getElementById('popupAD').textContent = 'Nessun dato registrato';
-        document.getElementById('popupTD').textContent = 'Nessun dato registrato';
+        if (document.getElementById('popupWorkers')) document.getElementById('popupWorkers').textContent = 'Nessun dato registrato';
+        if (document.getElementById('popupPS')) document.getElementById('popupPS').textContent = 'Nessun dato registrato';
+        if (document.getElementById('popupAD')) document.getElementById('popupAD').textContent = 'Nessun dato registrato';
+        if (document.getElementById('popupTD')) document.getElementById('popupTD').textContent = 'Nessun dato registrato';
     }
     
     popup.style.display = 'flex';

@@ -321,3 +321,18 @@
         max-width: 100px;
     }
 }
+
+/* ===== FIX DATE PICKER STORICO ===== */
+.storico-filters input[type="date"] {
+    background-color: #1a1a2e;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color-scheme: dark;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.storico-filters input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}

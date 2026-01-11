@@ -1326,3 +1326,87 @@ textarea.form-control[readonly] {
     font-size: 0.8rem;
     color: var(--text-primary);
 }
+
+/* ===== ERROR HIGHLIGHT IN INPUT ===== */
+.error-highlight-red {
+    background: rgba(255, 107, 107, 0.4);
+    color: #ff0000;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 700;
+    border: 1px solid #ff6b6b;
+}
+
+.error-highlight-yellow {
+    background: rgba(255, 213, 79, 0.4);
+    color: #ffd54f;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 700;
+    border: 1px solid #ffd54f;
+}
+
+.input-error-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #1a1a2e;
+    border: 2px solid #ff6b6b;
+    border-radius: 8px;
+    z-index: 100;
+    overflow: auto;
+    cursor: pointer;
+}
+
+.input-error-header {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+    color: white;
+    padding: 10px 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    position: sticky;
+    top: 0;
+}
+
+.input-error-content {
+    padding: 15px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: #ffffff;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+}
+
+/* ===== FIX SELECT DROPDOWN ===== */
+.andamento-selectors select.form-control {
+    background-color: #1a1a2e;
+    color: #ffffff;
+    border: 1px solid var(--border-glass);
+}
+
+.andamento-selectors select.form-control option {
+    background-color: #1a1a2e;
+    color: #ffffff;
+    padding: 10px;
+}
+
+.andamento-selectors select.form-control option:hover,
+.andamento-selectors select.form-control option:checked {
+    background-color: #0a84ff;
+    color: #ffffff;
+}
+
+/* ===== FIX SELECT GLOBAL ===== */
+select.form-control {
+    background-color: #1a1a2e !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+select.form-control option {
+    background-color: #1a1a2e;
+    color: #ffffff;
+}

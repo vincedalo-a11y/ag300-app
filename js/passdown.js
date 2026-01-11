@@ -479,12 +479,13 @@ function setupPassdownProcessorEvents() {
 }
 
 function analyzePassdown() {
-    const inputText = document.getElementById('inputText').value;
+    const inputBox = document.getElementById('inputText');
+    const inputText = inputBox.value;
     const outputBox = document.getElementById('outputText');
     const btnConfirm = document.getElementById('btnConfirm');
     
     if (!inputText.trim()) {
-        showValidationPopup('⚠️ Attenzione', ['Inserisci del testo da analizzare'], false);
+        showValidationPopup('⚠️ Attenzione', ['Inserisci del testo da analizzare'], false, []);
         btnConfirm.style.display = 'none';
         return;
     }
@@ -496,29 +497,165 @@ function analyzePassdown() {
     outputBox.dataset.rawText = processedText;
     
     const warnings = validateOutput(processedText);
+    console.log('Warnings:', warnings);
+
+    // Evidenzia errori nel box di input
+    highlightErrorsInInput(inputText, warnings);
     
     if (warnings.length > 0) {
-        showValidationPopup('⚠️ Attenzione', warnings, true);
+        showValidationPopup('⚠️ Problemi Rilevati', warnings, true, warnings);
     } else {
-        showValidationPopup('✅ Validazione completata', ['Tutto OK! Nessun problema rilevato.'], true);
+        showValidationPopup('✅ Validazione Completata', ['Tutto OK! Nessun problema rilevato.'], true, []);
     }
 }
 
-function showValidationPopup(title, messages, showConfirm) {
+function highlightErrorsInInput(text, warnings) {
+    const inputContainer = document.getElementById('inputText').parentElement;
+    
+    // Rimuovi preview esistente
+    const existingPreview = document.getElementById('inputErrorPreview');
+    if (existingPreview) existingPreview.remove();
+    
+    if (warnings.length === 0) return;
+    
+    // Crea una copia evidenziata del testo
+    let highlightedText = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\n/g, '<br>');
+    
+    // Separa errori da merge
+    const errors = [];
+    const merges = [];
+    const errorTools = [];
+    const mergeTools = [];
+    
+    warnings.forEach(warning => {
+        // Estrai il nome del tool dal warning
+        let toolName = null;
+        
+        // Pattern per estrarre il tool - ordine importante!
+        const patterns = [
+            /"([A-Z][A-Z0-9_]+)"/,                    // "TOOL"
+            /⚠️\s+([A-Z][A-Z0-9_]+)\s+manca/,         // ⚠️ TOOL manca
+            /⚠️\s+([A-Z][A-Z0-9_]+)\s+Tool/,          // ⚠️ TOOL Tool
+            /ℹ️\s+([A-Z][A-Z0-9_]+)\s+contiene/,      // ℹ️ TOOL contiene
+            /di\s+([A-Z][A-Z0-9_]+)/,                  // di TOOL
+            /Status\s+"[^"]+"\s+di\s+([A-Z][A-Z0-9_]+)/ // Status "..." di TOOL
+        ];
+        
+        for (const pattern of patterns) {
+            const match = warning.match(pattern);
+            if (match) {
+                toolName = match[1];
+                break;
+            }
+        }
+        
+        console.log('Warning:', warning, '-> Tool:', toolName);
+        
+        if (warning.includes('merge') || warning.includes('contiene un merge')) {
+            merges.push(warning);
+            if (toolName && !mergeTools.includes(toolName)) mergeTools.push(toolName);
+        } else {
+            errors.push(warning);
+            if (toolName && !errorTools.includes(toolName)) errorTools.push(toolName);
+        }
+    });
+    
+    console.log('Error tools:', errorTools);
+    console.log('Merge tools:', mergeTools);
+    
+    // Evidenzia tool con errori in rosso (solo all'inizio della riga, es. "DPROBA3_A:")
+    errorTools.forEach(toolName => {
+        const regex = new RegExp(`(^|<br>)(${toolName})(\\s*:)`, 'gi');
+        highlightedText = highlightedText.replace(regex, '$1<span class="error-highlight-red">$2</span>$3');
+    });
+    
+    // Evidenzia tool con merge in giallo
+    mergeTools.forEach(toolName => {
+        // Solo se non già evidenziato in rosso
+        if (!errorTools.includes(toolName)) {
+            const regex = new RegExp(`(^|<br>)(${toolName})(\\s*:)`, 'gi');
+            highlightedText = highlightedText.replace(regex, '$1<span class="error-highlight-yellow">$2</span>$3');
+        }
+    });
+    
+    // Costruisci la legenda solo con quello che serve
+    let legendHTML = '';
+    if (errorTools.length > 0) {
+        legendHTML += '<span class="error-highlight-red" style="margin-right: 10px;">Errore</span>';
+    }
+    if (mergeTools.length > 0) {
+        legendHTML += '<span class="error-highlight-yellow">Merge</span>';
+    }
+    
+    // Crea overlay con testo evidenziato
+    const preview = document.createElement('div');
+    preview.id = 'inputErrorPreview';
+    preview.className = 'input-error-preview';
+    preview.innerHTML = `
+        <div class="input-error-header">
+            <span>⚠️ Clicca per chiudere</span>
+            ${legendHTML ? `<div style="font-size: 0.8rem; margin-top: 5px;">${legendHTML}</div>` : ''}
+        </div>
+        <div class="input-error-content">${highlightedText}</div>
+    `;
+    
+    preview.addEventListener('click', () => {
+        preview.remove();
+    });
+    
+    inputContainer.style.position = 'relative';
+    inputContainer.appendChild(preview);
+}
+
+function showValidationPopup(title, messages, showConfirm, warnings) {
+    const isError = warnings && warnings.length > 0;
+    const iconStyle = isError 
+        ? 'background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);' 
+        : 'background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);';
+    const borderColor = isError ? '#ff6b6b' : '#51cf66';
+    
     const modalHTML = `
         <div class="modal-overlay active" id="validationModal">
-            <div class="modal">
-                <div class="modal-header">
-                    <h3 class="modal-title">${title}</h3>
-                    <button class="modal-close" id="closeValidationModal">&times;</button>
+            <div class="modal" style="max-width: 500px; border: 2px solid ${borderColor}; border-radius: 16px; overflow: hidden;">
+                <div class="modal-header" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 20px; border-bottom: 1px solid ${borderColor};">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 40px; height: 40px; ${iconStyle} border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                            ${isError ? '⚠️' : '✅'}
+                        </div>
+                        <h3 class="modal-title" style="margin: 0; color: #ffffff; font-size: 1.2rem;">${title}</h3>
+                    </div>
+                    <button class="modal-close" id="closeValidationModal" style="background: rgba(255,255,255,0.1); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 18px;">&times;</button>
                 </div>
-                <div class="modal-body">
-                    <ul style="list-style: none; padding: 0; margin: 0;">
-                        ${messages.map(m => `<li style="padding: 8px 0; border-bottom: 1px solid var(--border-glass);">${m}</li>`).join('')}
-                    </ul>
+                <div class="modal-body" style="padding: 20px; background: #1a1a2e;">
+                    ${isError ? `
+                        <div style="background: rgba(255, 107, 107, 0.1); border-radius: 10px; padding: 15px; margin-bottom: 10px;">
+                            <p style="color: #ff6b6b; margin: 0 0 10px 0; font-weight: 600;">📋 Problemi trovati:</p>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                ${messages.map(m => `
+                                    <li style="padding: 10px; margin-bottom: 8px; background: rgba(255,255,255,0.05); border-radius: 8px; color: #ffffff; border-left: 3px solid #ff6b6b;">
+                                        ${m}
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                        <p style="color: #aaaaaa; font-size: 0.85rem; margin: 10px 0 0 0;">
+                            💡 Gli errori sono evidenziati in <span style="background: rgba(255, 107, 107, 0.3); padding: 2px 6px; border-radius: 4px; color: #ff6b6b;">rosso</span> nel testo analizzato
+                        </p>
+                    ` : `
+                        <div style="background: rgba(81, 207, 102, 0.1); border-radius: 10px; padding: 20px; text-align: center;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">🎉</div>
+                            <p style="color: #51cf66; margin: 0; font-size: 1.1rem; font-weight: 600;">${messages[0]}</p>
+                        </div>
+                    `}
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" id="btnCloseValidation">OK</button>
+                <div class="modal-footer" style="padding: 15px 20px; background: #1a1a2e; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: center;">
+                    <button class="btn btn-primary" id="btnCloseValidation" style="padding: 10px 30px; font-size: 1rem; border-radius: 8px;">
+                        ${isError ? 'Ho capito' : 'Perfetto!'}
+                    </button>
                 </div>
             </div>
         </div>
@@ -529,7 +666,6 @@ function showValidationPopup(title, messages, showConfirm) {
     const closeModal = () => {
         const modal = document.getElementById('validationModal');
         if (modal) modal.remove();
-        
         // Mostra il pulsante conferma se la validazione è ok
         if (showConfirm) {
             document.getElementById('btnConfirm').style.display = 'inline-flex';
@@ -978,14 +1114,14 @@ async function savePassdownFinal() {
     // Prepara i record per il database
     const dbDate = convertToDbDate(currentShift.date);
     const records = allTools.map(t => ({
-        tool: t.tool,
-        data: dbDate,
-        shift: currentShift.type,
-        workers: currentShift.workers.join(', '),
-        status: t.status,
-        problemStatement: t.problemStatement || '',
-        actionsDone: t.actionsDone || '',
-        toDo: t.toDo || ''
+    tool: t.tool,
+    data: dbDate,
+    shift: currentShift.type,
+    workers: currentShift.workers.join(', '),
+    status: t.status,
+    problemStatement: (t.problemStatement || '').replace(/^\s*\n+/, '').trim(),
+    actionsDone: (t.actionsDone || '').replace(/^\s*\n+/, '').trim(),
+    toDo: (t.toDo || '').replace(/^\s*\n+/, '').trim()
     }));
     
     // Salva
@@ -1191,7 +1327,6 @@ function phaseTwo(firstEditingText) {
 function validateOutput(processedText) {
     const warnings = [];
     const blocks = processedText.split('\n\n').filter(b => b.trim());
-    
     const validStatusMarkers = passdownStatusData.map(s => s.marker);
     
     for (const block of blocks) {

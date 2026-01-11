@@ -51,6 +51,16 @@ function navigateTo(page) {
         case 'andamento':
             renderAndamentoPage();
             break;
+        case 'weekcalc':
+            main.innerHTML = renderWeekCalcPage();
+            setupWeekCalcEvents();
+            break;
+        case 'failexcluded':
+            main.innerHTML = renderFailExcludedPage();
+            break;
+        case 'cabinet':
+            main.innerHTML = renderCabinetPage();
+            break;
     }
 }
 
@@ -61,50 +71,57 @@ function renderHomePage() {
             <h1 class="page-title">👋 Benvenuto in AG300</h1>
             <p class="page-subtitle">CVD Special Tools Management System</p>
         </div>
-        
         <div class="home-grid">
             <div class="card home-card" data-goto="passdown">
                 <div class="home-card-icon">📋</div>
                 <div class="home-card-title">Passdown</div>
                 <div class="home-card-desc">Gestione note di passaggio turno</div>
             </div>
-
             <div class="card home-card" data-goto="storico">
                 <div class="home-card-icon">📚</div>
                 <div class="home-card-title">Storico Passdown</div>
                 <div class="home-card-desc">Consulta e filtra lo storico completo</div>
             </div>
-
             <div class="card home-card" data-goto="andamento">
                 <div class="home-card-icon">📈</div>
                 <div class="home-card-title">Andamento Tool</div>
                 <div class="home-card-desc">Grafico storico status per tool</div>
             </div>
-            
-            <div class="card home-card" data-goto="docs">
-                <div class="home-card-icon">📁</div>
-                <div class="home-card-title">Documentazione</div>
-                <div class="home-card-desc">Ricerca procedure e documenti</div>
-            </div>
-            
-            <div class="card home-card" data-goto="pm">
-                <div class="home-card-icon">🔧</div>
-                <div class="home-card-title">PM</div>
-                <div class="home-card-desc">Gestione manutenzioni preventive</div>
-            </div>
-            
-            <div class="card home-card" data-goto="settings">
-                <div class="home-card-icon">⚙️</div>
-                <div class="home-card-title">Settings</div>
-                <div class="home-card-desc">Configurazione e preferenze</div>
-            </div>
-
             <div class="card home-card" data-goto="statusboard">
                 <div class="home-card-icon">📊</div>
                 <div class="home-card-title">Status Board</div>
                 <div class="home-card-desc">Visualizza ultimo status board</div>
             </div>
-
+            <div class="card home-card" data-goto="weekcalc">
+                <div class="home-card-icon">📅</div>
+                <div class="home-card-title">Calcola Settimana</div>
+                <div class="home-card-desc">Calcola il numero della settimana</div>
+            </div>
+            <div class="card home-card" data-goto="failexcluded">
+                <div class="home-card-icon">🚫</div>
+                <div class="home-card-title">Fail-EXCLUDED</div>
+                <div class="home-card-desc">Gestione fermi non a carico AMAT</div>
+            </div>
+            <div class="card home-card" data-goto="docs">
+                <div class="home-card-icon">📁</div>
+                <div class="home-card-title">Documentazione</div>
+                <div class="home-card-desc">Ricerca procedure e documenti</div>
+            </div>
+            <div class="card home-card" data-goto="pm">
+                <div class="home-card-icon">🔧</div>
+                <div class="home-card-title">PM</div>
+                <div class="home-card-desc">Gestione manutenzioni preventive</div>
+            </div>
+            <div class="card home-card" data-goto="cabinet">
+                <div class="home-card-icon">🗄️</div>
+                <div class="home-card-title">Cabinet CleanRoom</div>
+                <div class="home-card-desc">Gestione cabinet e parti</div>
+            </div>
+            <div class="card home-card" data-goto="settings">
+                <div class="home-card-icon">⚙️</div>
+                <div class="home-card-title">Settings</div>
+                <div class="home-card-desc">Configurazione e preferenze</div>
+            </div>
         </div>
     `;
 }
@@ -398,6 +415,166 @@ function setupSettingsEvents() {
 
 function setupDeveloperEvents() {
     document.getElementById('btnContactDev')?.addEventListener('click', () => {
-        window.location.href = 'mailto:vincenzo.dalonzo@amat.com?subject=AG300 App - Feedback';
+        window.location.href = 'mailto:vincenzo_dalonzo@amat.com?subject=AG300 App - Feedback';
     });
+}
+
+
+// ===== CALCOLA SETTIMANA =====
+function renderWeekCalcPage() {
+    return `
+        <div class="page-header">
+            <h1 class="page-title">📅 Calcola Settimana</h1>
+            <p class="page-subtitle">Calcola il numero della settimana di una data</p>
+        </div>
+        
+        <div class="card" style="max-width: 500px; margin: 0 auto;">
+            <div class="week-calc-container">
+                <div class="form-group">
+                    <label class="form-label">Seleziona una data</label>
+                    <input type="date" class="form-control" id="weekCalcDate" style="font-size: 1.2rem; padding: 15px;">
+                </div>
+                
+                <button class="btn btn-primary" id="btnCalcWeek" style="width: 100%; margin-top: 15px; padding: 15px; font-size: 1.1rem;">
+                    🔍 Calcola Settimana
+                </button>
+                
+                <div id="weekCalcResult" style="display: none; margin-top: 25px; text-align: center;">
+                    <div style="background: linear-gradient(135deg, #0a84ff 0%, #0066cc 100%); border-radius: 16px; padding: 30px; color: white;">
+                        <div style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 5px;">SETTIMANA</div>
+                        <div id="weekNumber" style="font-size: 4rem; font-weight: 700; line-height: 1;"></div>
+                        <div id="weekYear" style="font-size: 1.1rem; opacity: 0.8; margin-top: 5px;"></div>
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+                            <div id="dayName" style="font-size: 1.3rem; font-weight: 600;"></div>
+                            <div id="fullDate" style="font-size: 1rem; opacity: 0.8; margin-top: 5px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="navigateTo('home')">← Torna alla Home</button>
+        </div>
+    `;
+}
+
+function setupWeekCalcEvents() {
+    // Imposta data di oggi come default
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('weekCalcDate').value = today;
+    
+    document.getElementById('btnCalcWeek')?.addEventListener('click', calculateWeek);
+    
+    // Calcola anche premendo Enter
+    document.getElementById('weekCalcDate')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') calculateWeek();
+    });
+    
+    // Calcola automaticamente quando cambia la data
+    document.getElementById('weekCalcDate')?.addEventListener('change', calculateWeek);
+    
+    // Calcola subito per la data di oggi
+    calculateWeek();
+}
+
+function calculateWeek() {
+    const dateInput = document.getElementById('weekCalcDate').value;
+    
+    if (!dateInput) {
+        alert('Seleziona una data!');
+        return;
+    }
+    
+    const date = new Date(dateInput + 'T00:00:00');
+    
+    // Calcola numero settimana (ISO 8601 - settimana inizia di lunedì)
+    const weekNumber = getISOWeekNumber(date);
+    const year = getISOWeekYear(date);
+    
+    // Giorni della settimana in italiano
+    const dayNames = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+    const monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 
+                        'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
+    
+    const dayName = dayNames[date.getDay()];
+    const day = date.getDate();
+    const month = monthNames[date.getMonth()];
+    const fullYear = date.getFullYear();
+    
+    // Mostra risultato
+    document.getElementById('weekCalcResult').style.display = 'block';
+    document.getElementById('weekNumber').textContent = weekNumber;
+    document.getElementById('weekYear').textContent = `dell'anno ${year}`;
+    document.getElementById('dayName').textContent = dayName;
+    document.getElementById('fullDate').textContent = `${day} ${month} ${fullYear}`;
+}
+
+// Calcola numero settimana ISO 8601 (lunedì = primo giorno)
+function getISOWeekNumber(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
+// Calcola anno ISO della settimana
+function getISOWeekYear(date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    return d.getUTCFullYear();
+}
+
+// ===== FAIL-EXCLUDED =====
+function renderFailExcludedPage() {
+    return `
+        <div class="page-header">
+            <h1 class="page-title">🚫 Fail-EXCLUDED</h1>
+            <p class="page-subtitle">Gestione fermi non a carico AMAT</p>
+        </div>
+        
+        <div class="card">
+            <div class="placeholder-content">
+                <div class="placeholder-icon">🏗️</div>
+                <div class="placeholder-text">Funzionalità in fase di sviluppo</div>
+                <p style="color: var(--text-secondary); margin-top: 10px;">
+                    Qui potrai gestire i fermi che non sono a carico di AMAT
+                </p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="navigateTo('home')">← Torna alla Home</button>
+        </div>
+    `;
+}
+
+// ===== CABINET CLEANROOM =====
+function renderCabinetPage() {
+    return `
+        <div class="page-header">
+            <h1 class="page-title">🗄️ Cabinet CleanRoom</h1>
+            <p class="page-subtitle">Gestione cabinet e parti</p>
+        </div>
+        
+        <div class="card">
+            <div class="placeholder-content">
+                <div class="placeholder-icon">👷</div>
+                <div class="placeholder-text" style="font-size: 1.5rem;">Area di Andres</div>
+                <p style="color: var(--text-secondary); margin-top: 15px; font-size: 1.1rem;">
+                    🚧 Pagina in costruzione... Andres sta lavorando duramente! 🚧
+                </p>
+                <p style="color: var(--text-tertiary); margin-top: 10px; font-style: italic;">
+                    "Non disturbare il maestro mentre crea il suo capolavoro"
+                </p>
+                <div style="font-size: 3rem; margin-top: 20px;">💪 ☕ 💻</div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn btn-secondary" onclick="navigateTo('home')">← Torna alla Home</button>
+        </div>
+    `;
 }
