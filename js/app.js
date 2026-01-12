@@ -61,6 +61,9 @@ function navigateTo(page) {
         case 'cabinet':
             main.innerHTML = renderCabinetPage();
             break;
+        case 'andamentoarea':
+            renderAndamentoAreaPage();
+            break;
     }
 }
 
@@ -87,6 +90,11 @@ function renderHomePage() {
                 <div class="home-card-title">Andamento Tool</div>
                 <div class="home-card-desc">Grafico storico status per tool</div>
             </div>
+            <div class="card home-card" data-goto="andamentoarea">
+                <div class="home-card-icon">🏭</div>
+                <div class="home-card-title">Andamento Area</div>
+                <div class="home-card-desc">Distribuzione status tutti i tool</div>
+            </div>
             <div class="card home-card" data-goto="statusboard">
                 <div class="home-card-icon">📊</div>
                 <div class="home-card-title">Status Board</div>
@@ -101,6 +109,9 @@ function renderHomePage() {
                 <div class="home-card-icon">🚫</div>
                 <div class="home-card-title">Fail-EXCLUDED</div>
                 <div class="home-card-desc">Gestione fermi non a carico AMAT</div>
+                <div class="home-card-status" id="failExcludedStatus">
+                    <span class="status-loading">⏳</span>
+                </div>
             </div>
             <div class="card home-card" data-goto="docs">
                 <div class="home-card-icon">📁</div>
@@ -133,6 +144,38 @@ function setupHomeEvents() {
             navigateTo(page);
         });
     });
+    
+    // Carica stato fermi attivi
+    loadActiveFailsCount();
+}
+
+// Funzione per caricare conteggio fermi attivi
+async function loadActiveFailsCount() {
+    try {
+        const { data, error } = await db
+            .from('fail_excluded')
+            .select('id')
+            .is('end_datetime', null);
+        
+        if (error) throw error;
+        
+        const count = data ? data.length : 0;
+        const statusEl = document.getElementById('failExcludedStatus');
+        
+        if (statusEl) {
+            if (count > 0) {
+                statusEl.innerHTML = `<span class="status-badge status-danger">🔴 ${count} attivi</span>`;
+            } else {
+                statusEl.innerHTML = `<span class="status-badge status-success">🟢 Nessun fermo</span>`;
+            }
+        }
+    } catch (e) {
+        console.error('Errore caricamento fermi attivi:', e);
+        const statusEl = document.getElementById('failExcludedStatus');
+        if (statusEl) {
+            statusEl.innerHTML = '';
+        }
+    }
 }
 
 // ===== DOCS PAGE =====
@@ -374,11 +417,31 @@ function renderVersionSection() {
     return `
         <div class="version-section">
             <div class="version-logo">🔧</div>
-            <h2>AG300 - CVD Special Tools</h2>
+            <h2>AG300 - CVD Management System</h2>
             <div class="version-info-box">
                 <div class="version-row"><span>Versione:</span><strong>1.0.0</strong></div>
                 <div class="version-row"><span>Sviluppatore:</span><strong>Vincenzo D'Alonzo</strong></div>
                 <div class="version-row"><span>Ultimo aggiornamento:</span><strong>Gennaio 2026</strong></div>
+            </div>
+            
+            <div class="version-changelog">
+                <h3>📋 Funzionalità attive</h3>
+                <ul class="changelog-list">
+                    <li><span class="changelog-icon">✅</span> Gestione Passdown con generazione automatica mail</li>
+                    <li><span class="changelog-icon">✅</span> Storico passdown con filtri e consultazione</li>
+                    <li><span class="changelog-icon">✅</span> Status Board con overview turno corrente</li>
+                    <li><span class="changelog-icon">✅</span> Andamento Tool - grafico storico per singolo tool</li>
+                    <li><span class="changelog-icon">✅</span> Andamento Area - distribuzione status tutti i tool</li>
+                    <li><span class="changelog-icon">✅</span> Fail-Excluded - gestione fermi non a carico AMAT</li>
+                    <li><span class="changelog-icon">✅</span> Calcola Settimana - conversione data/settimana ISO</li>
+                </ul>
+                
+                <h3>🚧 In sviluppo</h3>
+                <ul class="changelog-list">
+                    <li><span class="changelog-icon">🔨</span> Documentazione - ricerca procedure SharePoint</li>
+                    <li><span class="changelog-icon">🔨</span> PM - gestione manutenzioni preventive</li>
+                    <li><span class="changelog-icon">🔨</span> Cabinet CleanRoom - gestione parti e ricambi</li>
+                </ul>
             </div>
         </div>
     `;
@@ -525,30 +588,6 @@ function getISOWeekYear(date) {
     const dayNum = d.getUTCDay() || 7;
     d.setUTCDate(d.getUTCDate() + 4 - dayNum);
     return d.getUTCFullYear();
-}
-
-// ===== FAIL-EXCLUDED =====
-function renderFailExcludedPage() {
-    return `
-        <div class="page-header">
-            <h1 class="page-title">🚫 Fail-EXCLUDED</h1>
-            <p class="page-subtitle">Gestione fermi non a carico AMAT</p>
-        </div>
-        
-        <div class="card">
-            <div class="placeholder-content">
-                <div class="placeholder-icon">🏗️</div>
-                <div class="placeholder-text">Funzionalità in fase di sviluppo</div>
-                <p style="color: var(--text-secondary); margin-top: 10px;">
-                    Qui potrai gestire i fermi che non sono a carico di AMAT
-                </p>
-            </div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <button class="btn btn-secondary" onclick="navigateTo('home')">← Torna alla Home</button>
-        </div>
-    `;
 }
 
 // ===== CABINET CLEANROOM =====

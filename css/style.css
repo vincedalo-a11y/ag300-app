@@ -125,6 +125,14 @@ body {
     width: 100%;
 }
 
+/* Nav Brand Enhancement */
+.nav-title {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+}
+
 /* ===== CARDS ===== */
 .card {
     background: var(--bg-card);
@@ -1409,4 +1417,100 @@ select.form-control {
 select.form-control option {
     background-color: #1a1a2e;
     color: #ffffff;
+}
+
+/* ===== FIX INPUT DATE ===== */
+input[type="date"].form-control {
+    background-color: #1a1a2e !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color-scheme: dark;
+}
+
+input[type="date"].form-control::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+input[type="date"].form-control::-webkit-datetime-edit {
+    color: #ffffff;
+}
+
+input[type="date"].form-control::-webkit-datetime-edit-fields-wrapper {
+    color: #ffffff;
+}
+
+/* ===== HOME CARD STATUS ===== */
+.home-card-status {
+    margin-top: 12px;
+    min-height: 24px;
+}
+
+.status-loading {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.status-danger {
+    background: rgba(255, 69, 58, 0.15);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 69, 58, 0.3);
+}
+
+.status-badge.status-success {
+    background: rgba(50, 215, 75, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(50, 215, 75, 0.3);
+}
+
+/* ===== VERSION CHANGELOG ===== */
+.version-changelog {
+    margin-top: 24px;
+    text-align: left;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.version-changelog h3 {
+    font-size: 0.95rem;
+    color: var(--primary);
+    margin: 20px 0 12px 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.changelog-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.changelog-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.changelog-list li:last-child {
+    border-bottom: none;
+}
+
+.changelog-icon {
+    flex-shrink: 0;
+    font-size: 0.9rem;
 }

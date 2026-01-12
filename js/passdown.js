@@ -763,17 +763,53 @@ async function goToReviewPage() {
     document.getElementById('mainContent').innerHTML = renderReviewPage();
     setupReviewPageEvents();
     
+    // Scroll to top della pagina
+    window.scrollTo(0, 0);
+    
     // Auto-resize di tutte le textarea e colora status
     setTimeout(() => {
+        // Auto-resize textarea sezione current e manual
         document.querySelectorAll('.cell-input').forEach(textarea => {
             autoResizeTextarea(textarea);
         });
+        
+        // Per la sezione previous: uniforma altezza righe al contenuto massimo
+        autoResizePreviousToolsRows();
+        
+        // Colora status
         document.querySelectorAll('.status-select').forEach(select => {
             const color = getStatusColor(select.value);
             select.style.setProperty('background-color', color, 'important');
             select.style.setProperty('color', getContrastTextColor(color), 'important');
         });
     }, 200);
+}
+
+// Funzione per uniformare altezza righe nella sezione previous
+function autoResizePreviousToolsRows() {
+    const previousTable = document.getElementById('previousToolsTable');
+    if (!previousTable) return;
+    
+    const rows = previousTable.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        const textareas = row.querySelectorAll('.cell-input');
+        let maxHeight = 60; // Altezza minima
+        
+        // Prima passa: calcola altezza massima necessaria
+        textareas.forEach(textarea => {
+            textarea.style.height = 'auto';
+            const scrollHeight = textarea.scrollHeight;
+            if (scrollHeight > maxHeight) {
+                maxHeight = scrollHeight;
+            }
+        });
+        
+        // Seconda passa: applica altezza uniforme a tutte le textarea della riga
+        textareas.forEach(textarea => {
+            textarea.style.height = maxHeight + 'px';
+        });
+    });
 }
 
 function parseToolsForReview(rawText) {

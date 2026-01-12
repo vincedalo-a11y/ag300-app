@@ -1,0 +1,448 @@
+/* ===== FAIL-EXCLUDED STYLES ===== */
+
+/* Page Header Row */
+.page-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.page-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.record-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* ===== SEZIONI CON BORDINI COLORATI ===== */
+
+/* Sezione Nuovo - Blu */
+.card.section-new {
+    border-left: 4px solid var(--primary);
+    background: linear-gradient(90deg, rgba(10, 132, 255, 0.05) 0%, var(--bg-card) 100%);
+}
+
+.card.section-new .card-header {
+    border-bottom-color: rgba(10, 132, 255, 0.2);
+}
+
+.card.section-new .card-title {
+    color: var(--primary);
+}
+
+/* Sezione Attivi - Rosso/Arancio */
+.card.section-active {
+    border-left: 4px solid var(--danger);
+    background: linear-gradient(90deg, rgba(255, 69, 58, 0.05) 0%, var(--bg-card) 100%);
+}
+
+.card.section-active .card-header {
+    border-bottom-color: rgba(255, 69, 58, 0.2);
+}
+
+.card.section-active .card-title {
+    color: var(--danger);
+}
+
+/* Sezione Chiusi - Verde */
+.card.section-closed {
+    border-left: 4px solid var(--success);
+    background: linear-gradient(90deg, rgba(50, 215, 75, 0.05) 0%, var(--bg-card) 100%);
+}
+
+.card.section-closed .card-header {
+    border-bottom-color: rgba(50, 215, 75, 0.2);
+}
+
+.card.section-closed .card-title {
+    color: var(--success);
+}
+
+/* Form Nuovo Inserimento */
+.fail-form {
+    padding: 8px 0;
+}
+
+.fail-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.fail-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-glass);
+}
+
+/* Badge */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+.badge-danger {
+    background: rgba(255, 69, 58, 0.2);
+    color: var(--danger);
+}
+
+.badge-success {
+    background: rgba(50, 215, 75, 0.2);
+    color: var(--success);
+}
+
+/* Table Container */
+.fail-table-container {
+    overflow-x: auto;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Fail Table */
+.fail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+}
+
+.fail-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.fail-table th {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    border-bottom: 1px solid var(--border-glass);
+    white-space: nowrap;
+}
+
+.fail-table td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-glass);
+    vertical-align: middle;
+}
+
+/* ===== HOVER ESPANSIONE RIGA ===== */
+.fail-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.fail-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* Celle con testo troncato - stato normale */
+.fail-table .reason-cell,
+.fail-table .notes-cell {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+/* Hover sulla riga: espandi le celle */
+.fail-table tbody tr:hover .reason-cell,
+.fail-table tbody tr:hover .notes-cell {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow: visible;
+    max-width: 300px;
+}
+
+/* Cell Styles */
+.fail-table .tool-cell {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-weight: 600;
+    color: var(--primary);
+    white-space: nowrap;
+}
+
+.fail-table .duration-cell {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.fail-table .notes-cell {
+    color: var(--text-secondary);
+}
+
+.fail-table .actions-cell {
+    white-space: nowrap;
+    text-align: right;
+}
+
+/* Icon Buttons */
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    margin-left: 4px;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.1);
+}
+
+.btn-icon.btn-close-fail:hover {
+    background: rgba(50, 215, 75, 0.3);
+}
+
+.btn-icon.btn-edit-fail:hover {
+    background: rgba(10, 132, 255, 0.3);
+}
+
+.btn-icon.btn-delete:hover {
+    background: rgba(255, 69, 58, 0.3);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Datetime Input Styling */
+input[type="datetime-local"].form-control {
+    background-color: #1a1a2e !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color-scheme: dark;
+}
+
+input[type="datetime-local"].form-control::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .fail-form-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header-row {
+        flex-direction: column;
+    }
+    
+    .page-header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .fail-form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .fail-table {
+        font-size: 0.8rem;
+    }
+    
+    .fail-table th,
+    .fail-table td {
+        padding: 8px 6px;
+    }
+    
+    .fail-table .reason-cell,
+    .fail-table .notes-cell {
+        max-width: 120px;
+    }
+}
+
+/* ===== FILTRO SETTIMANA ===== */
+
+/* Info settimana corrente */
+.current-week-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.current-week-number {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.week-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.week-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.week-year {
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.week-range {
+    background: rgba(10, 132, 255, 0.1);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+/* Form filtro */
+.filter-form {
+    padding: 16px 0;
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px;
+    align-items: end;
+}
+
+.filter-btn-group {
+    padding-bottom: 0;
+}
+
+/* Sezione export */
+.card.section-export {
+    border-left: 4px solid #f59e0b;
+    background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, var(--bg-card) 100%);
+}
+
+.card.section-export .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.week-range-badge {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.export-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-glass);
+    margin-bottom: 16px;
+}
+
+.result-count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Tabella Export - Sfondo chiaro */
+.export-table-container {
+    overflow-x: auto;
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.export-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background: #ffffff;
+    color: #1a1a2e;
+}
+
+.export-table th {
+    background: #f3f4f6;
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.export-table td {
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    vertical-align: top;
+    color: #1f2937;
+    background: #ffffff;
+}
+
+.export-table tbody tr:nth-child(even) td {
+    background: #f9fafb;
+}
+
+.export-table tbody tr:hover td {
+    background: #fef3c7;
+}
+
+/* Pulsante copia feedback */
+.btn-copied {
+    background: var(--success) !important;
+    pointer-events: none;
+}
+
+/* Responsive filtro */
+@media (max-width: 768px) {
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .current-week-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .export-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+}

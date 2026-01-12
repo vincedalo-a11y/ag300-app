@@ -1,0 +1,241 @@
+/* ===== ANDAMENTO AREA STYLES ===== */
+
+/* Controls */
+.area-controls {
+    margin-bottom: 20px;
+}
+
+.area-selectors {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.area-select-group {
+    min-width: 200px;
+}
+
+.area-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-glass);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.area-info span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.area-info span::before {
+    content: '•';
+    color: var(--primary);
+}
+
+.area-info span:first-child::before {
+    content: '📊';
+}
+
+.area-info span:last-child::before {
+    content: '📅';
+}
+
+/* Loading */
+.loading-area {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(10, 132, 255, 0.2);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-area p {
+    color: var(--text-secondary);
+    margin: 8px 0;
+}
+
+.loading-progress {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Charts Grid */
+.area-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Single Chart Card */
+.area-chart-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.area-chart-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+
+.area-chart-card.card-good::before {
+    background: linear-gradient(90deg, #00ff00, #00cc00);
+}
+
+.area-chart-card.card-warning::before {
+    background: linear-gradient(90deg, #ffc000, #ff9500);
+}
+
+.area-chart-card.card-critical::before {
+    background: linear-gradient(90deg, #ff453a, #ff0000);
+}
+
+.area-chart-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    border-color: var(--primary);
+}
+
+/* Chart Header */
+.area-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.area-chart-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'Monaco', 'Consolas', monospace;
+    margin: 0;
+}
+
+.area-chart-uptime {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.card-good .area-chart-uptime {
+    background: rgba(0, 255, 0, 0.15);
+    color: #00ff00;
+}
+
+.card-warning .area-chart-uptime {
+    background: rgba(255, 192, 0, 0.15);
+    color: #ffc000;
+}
+
+.card-critical .area-chart-uptime {
+    background: rgba(255, 69, 58, 0.15);
+    color: #ff453a;
+}
+
+/* Chart Wrapper */
+.area-chart-wrapper {
+    position: relative;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.area-chart-wrapper canvas {
+    max-height: 150px !important;
+    max-width: 150px !important;
+}
+
+/* Legend */
+.area-chart-legend {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-glass);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.legend-label {
+    flex: 1;
+    color: var(--text-secondary);
+}
+
+.legend-value {
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 45px;
+    text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .area-selectors {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .area-select-group {
+        min-width: 100%;
+    }
+    
+    .area-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .area-charts-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .area-charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
