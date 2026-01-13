@@ -4,6 +4,20 @@ let failExcludedData = [];
 let failExcludedToolsList = [];
 let isFullHistoryLoaded = false;
 
+// Converte datetime-local in ISO string con timezone esplicito
+function toLocalISOString(datetimeLocalValue) {
+    if (!datetimeLocalValue) return null;
+    
+    const date = new Date(datetimeLocalValue);
+    const offsetMinutes = -date.getTimezoneOffset();
+    const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60);
+    const offsetMins = Math.abs(offsetMinutes) % 60;
+    const offsetSign = offsetMinutes >= 0 ? '+' : '-';
+    const offsetStr = `${offsetSign}${String(offsetHours).padStart(2, '0')}:${String(offsetMins).padStart(2, '0')}`;
+    
+    return `${datetimeLocalValue}:00${offsetStr}`;
+}
+
 // ===== DATABASE FUNCTIONS =====
 
 // Carica ultime N righe (default 100)
@@ -382,8 +396,8 @@ async function handleAddFail() {
     
     const result = await insertFailExcluded({
         tool,
-        start_datetime: startDatetime,
-        end_datetime: endDatetime || null,
+        start_datetime: toLocalISOString(startDatetime),
+        end_datetime: toLocalISOString(endDatetime),
         reason,
         notes: notes || null
     });
@@ -428,7 +442,7 @@ async function handleTableAction(e) {
 // ===== MODALS =====
 
 function showCloseFailModal(record) {
-    const now = new Date().toISOString().slice(0, 16);
+    const now = formatDateTimeForInput(new Date().toISOString());
     
     const modalHtml = `
         <div class="modal-overlay active" id="closeFailModal">
@@ -464,7 +478,7 @@ function showCloseFailModal(record) {
             return alert('La data di fine deve essere successiva a quella di inizio!');
         }
         
-        const result = await updateFailExcluded(record.id, { end_datetime: endDatetime });
+        const result = await updateFailExcluded(record.id, { end_datetime: toLocalISOString(endDatetime) });
         if (result.success) {
             closeModal('closeFailModal');
             await renderFailExcludedPage();
@@ -541,8 +555,8 @@ function showEditFailModal(record) {
         
         const result = await updateFailExcluded(record.id, {
             tool,
-            start_datetime: start,
-            end_datetime: end || null,
+            start_datetime: toLocalISOString(start),
+            end_datetime: toLocalISOString(end),
             reason,
             notes: notes || null
         });
